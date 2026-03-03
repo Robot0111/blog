@@ -1,33 +1,97 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html data-bs-theme="dark" lang="zh" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
 	<title>Login</title>
+	<link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.css">
+	<link th:href="@{/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.css}" rel="stylesheet">
 	<link rel="stylesheet" href="/css/style.css">
 </head>
-
+<div class="position-absolute top-0 end-0 p-3">
+	<button class="btn btn-outline-secondary btn-sm " id="themeToggle">
+		切换主题
+	</button>
+</div>
 <body>
-	<h2>Login</h2>
-	<div th:if="${param.error}">
-		<p style="color: red;">Invalid username or password.</p>
-	</div>
-	<div th:if="${param.logout}">
-		<p style="color: green;">You have been logged out.</p>
-	</div>
-	<form th:action="@{/login}" method="post">
-		<div>
-			<label for="username">Username:</label>
-			<input type="text" id="username" name="username" required>
-		</div>
-		<div>
-			<label for="password">Password:</label>
-			<input type="password" id="password" name="password" required>
-		</div>
-		<div>
-			<button type="submit">Login</button>
-		</div>
-	</form>
-</body>
 
+
+	<div class="container">
+		<div class="row w-100 vh-100 d-flex justify-content-center align-items-center">
+			<div class="col-12 col-md-4">
+				<div class="card shadow">
+					<div class="card-body">
+						<h3 class="text-center mb-4">登录</h3>
+						<form th:action="@{/login}" autocomplete="off" method="post">
+							<div class="mb-3">
+								<input class="form-control" id="username" name="username" placeholder="用户名" type="text">
+							</div>
+							<div class="mb-3">
+								<div class="input-group">
+									<input class="form-control"
+										   id="password" name="password"
+										   placeholder="密码"
+										   type="password">
+									<button class="btn btn-outline-primary"
+											onclick="togglePassword(this)"
+											type="button">
+										<i class="bi bi-eye"></i>
+									</button>
+								</div>
+								<div class="form-text mt-2">
+
+									<div th:if="${param.error}" class="text-danger">
+										Invalid username or password.
+									</div>
+
+									<div th:if="${param.logout}" class="text-success">
+										You have been logged out.
+									</div>
+
+									<div th:unless="${param.error != null or param.logout != null}">
+										您的密码长度必须为 8-20 个字符,包含字母和数字，但不能包含空格。
+									</div>
+
+								</div>
+							</div>
+							<button class="btn btn-success w-100" type="submit">登录</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+<script src="/webjars/bootstrap/5.3.3/js/bootstrap.bundle.js"></script>
+<script>
+	const btn = document.getElementById("themeToggle");
+
+	btn.addEventListener("click", function () {
+		debugger
+		const html = document.documentElement;
+		const currentTheme = html.getAttribute("data-bs-theme");
+
+		if (currentTheme === "light" || currentTheme == null) {
+			html.setAttribute("data-bs-theme", "dark");
+		} else {
+			html.setAttribute("data-bs-theme", "light");
+		}
+	});
+
+	function togglePassword(btn) {
+		const input = document.getElementById("password");
+		const icon = btn.querySelector("i");
+
+		if (input.type === "password") {
+			input.type = "text";
+			icon.classList.remove("bi-eye");
+			icon.classList.add("bi-eye-slash");
+		} else {
+			input.type = "password";
+			icon.classList.remove("bi-eye-slash");
+			icon.classList.add("bi-eye");
+		}
+	}
+</script>
 </html>

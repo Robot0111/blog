@@ -4,9 +4,9 @@
 <head>
 	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
 	<title>Login</title>
-	<link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.css">
+	<link th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.css}" rel="stylesheet" >
 	<link th:href="@{/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.css}" rel="stylesheet">
-	<link rel="stylesheet" href="/css/style.css">
+	<link th:href="@{/css/login.css}" rel="stylesheet" type="text/css" />
 </head>
 <div class="position-absolute top-0 end-0 p-3">
 	<button class="btn btn-outline-secondary btn-sm " id="themeToggle">
@@ -14,8 +14,6 @@
 	</button>
 </div>
 <body>
-
-
 	<div class="container">
 		<div class="row w-100 vh-100 d-flex justify-content-center align-items-center">
 			<div class="col-12 col-md-4">
@@ -24,10 +22,12 @@
 						<h3 class="text-center mb-4">登录</h3>
 						<form th:action="@{/login}" autocomplete="off" method="post">
 							<div class="mb-3">
+								<label for="username" class="visually-hidden">用户名</label>
 								<input class="form-control" id="username" name="username" placeholder="用户名" type="text">
 							</div>
 							<div class="mb-3">
 								<div class="input-group">
+									<label for="password" class="visually-hidden">密码</label>
 									<input class="form-control"
 										   id="password" name="password"
 										   placeholder="密码"
@@ -62,13 +62,10 @@
 		</div>
 	</div>
 </body>
-<script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
-<script src="/webjars/bootstrap/5.3.3/js/bootstrap.bundle.js"></script>
 <script>
+    /*切换主题颜色 在亮暗之间转换*/
 	const btn = document.getElementById("themeToggle");
-
 	btn.addEventListener("click", function () {
-		debugger
 		const html = document.documentElement;
 		const currentTheme = html.getAttribute("data-bs-theme");
 
@@ -78,7 +75,7 @@
 			html.setAttribute("data-bs-theme", "light");
 		}
 	});
-
+	/*密码框点击眼睛显示明文密码*/
 	function togglePassword(btn) {
 		const input = document.getElementById("password");
 		const icon = btn.querySelector("i");

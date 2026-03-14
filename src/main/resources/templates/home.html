@@ -1,117 +1,32 @@
 <!DOCTYPE HTML>
-<html lang="zh" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" content="width=device-width, initial-scale=1" name="viewport">
-    <title>home</title>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.css}">
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.css}">
-    <link rel="stylesheet" th:href="@{/css/home.css}" type="text/css" />
-</head>
-
-<body>
-<nav class="navbar navbar-expand-md bg-body-tertiary">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-
-        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-                class="navbar-toggler" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse"
-                type="button">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a aria-current="page" class="nav-link active" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Archives</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Labels</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-
-            </ul>
-            <form class="d-flex" role="search" th:action="@{/logout}">
-                <input aria-label="Search" class="form-control me-2" placeholder="Search" type="search">
-                <button class="btn btn-outline-success" type="submit">Logout</button>
-            </form>
-        </div>
-    </div>
-</nav>
-<div class="container-fluid mt-4">
-    <div class="row">
-        <div class="col-11 col-lg-8 mx-auto">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: layout(~{::cardTxt}, ~{},~{})}">
+    <section class="row" th:fragment="cardTxt">
+        <div class="col-12 col-lg-12 mx-auto">
             <div class="row mb-4 ">
                 <div class="card shadow-sm justify-content-center">
-                    <div class="card-body pt-4">
+                    <div class="text-center card-body pt-4 position-relative">
                         <!-- 标题 -->
-                        <h5 class="card-title  mb-3">
+                        <h5 class="card-title mb-3">
                             <a class=" text-decoration-none text-body fw-light" th:href="@{/admin}">LinkedHashSet源码解析</a>
                         </h5>
+                        <!-- 简介 -->
+                        <p class="card-text small mb-0"> Deprecation: With the addition of the expanded
+                            theme colors and variables, the .text-muted utility has been deprecated as o
+                            f v5.3.0. Its default value has also been reassigned to
+                            the new --bs-secondary-color CSS variable to better support color modes. It will be removed in v6.0.0.</p>
+
                         <!-- 文章信息 -->
-                        <div class="text-muted small d-flex gap-3 mb-2">
+                        <div class="text-muted small d-flex gap-3 position-absolute top-0 end-0 p-2 opacity-75">
                             <span><i class="bi bi-calendar3 me-1"></i>
                                 <time datetime="2026-03-10">2026-03-10</time>
                             </span>
                             <span><i class="bi bi-eye me-1"></i>123</span>
                             <span><i class="bi bi-chat-dots me-1"></i>5</span>
                         </div>
-                        <!-- 简介 -->
-                        <p class="card-text small mb-0"> 文章简介...</p>
-
                     </div>
                 </div>
+
             </div>
         </div>
-        <!--日期控件-->
-        <div class="col-lg-3 d-none d-lg-block sidebar mx-auto">
-            <div class="card shadow-sm">
-                <div class="card-body p-2">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <button class="btn btn-sm btn-outline-secondary px-2" id="prevMonth">
-                            <i class="bi bi-chevron-left"></i>
-                        </button>
-                        <span class="fw-semibold" id="calendarTitle"></span>
-                        <button class="btn btn-sm btn-outline-secondary px-2" id="nextMonth">
-                            <i class="bi bi-chevron-right"></i>
-                        </button>
-                    </div>
-
-                    <table class="table table-sm text-center mb-0 table-borderless calendar-table">
-                        <thead>
-                        <tr>
-                            <th>一</th>
-                            <th>二</th>
-                            <th>三</th>
-                            <th>四</th>
-                            <th>五</th>
-                            <th>六</th>
-                            <th>日</th>
-                        </tr>
-                        </thead>
-                        <tbody id="calendarBody"></tbody>
-                    </table>
-
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <button class="theme-fab btn btn-primary rounded-circle shadow" id="themeToggle">
-        <i class="bi bi-moon" id="themeIcon"></i>
-    </button>
-
-</div>
-<!--	<h2>Welcome to Home Page</h2>-->
-<!--	<p>Hello, <span sec:authentication="name">User</span>!</p>-->
-<!--	<div sec:authorize="hasRole('ADMIN')">-->
-<!--		<p><a th:href="@{/admin}">Go to Admin Page</a></p>-->
-<!--	</div>-->
-<!--	<p><a th:href="@{/logout}">Logout</a></p>-->
-</body>
-<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/js/home.js}"></script>
+    </section>
 </html>

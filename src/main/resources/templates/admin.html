@@ -1,17 +1,92 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<head>
-	<meta charset="UTF-8">
-	<title>Admin</title>
-	<link rel="stylesheet" href="/css/login.css">
-</head>
-
-<body>
-	<h2>Admin Page</h2>
-	<p>Welcome, Admin!</p>
-	<p><a th:href="@{/home}">Back to Home</a></p>
-	<p><a th:href="@{/logout}">Logout</a></p>
-</body>
-
+<html lang="zh" th:replace="~{layout/main :: layout(~{::markdown}, ~{::scripts},~{::css})}"
+      xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="css">
+    <link rel="stylesheet" th:href="@{/webjars/highlightjs/11.11.1/styles/vs.min.css}">
+</th:block>
+<section th:fragment="markdown">
+    <div class="row">
+        <div class="toolbar mb-2 row align-items-center d-flex justify-content-between p-0">
+            <div class="btn-toolbar ">
+                <div class="btn-group dropstart">
+                    <button class="btn btn-secondary  dropdown-toggle"
+                            data-bs-toggle="dropdown" title="标题">
+                        <i class="bi bi-type"></i>
+                    </button>
+                    <ul class="dropdown-menu" style="min-width: 50px; max-width: 50px;">
+                        <li><a class="dropdown-item bi bi-type-h1" onclick="heading(1)"></a></li>
+                        <li><a class="dropdown-item bi bi-type-h2" onclick="heading(2)"></a></li>
+                        <li><a class="dropdown-item bi bi-type-h3" onclick="heading(3)"></a></li>
+                        <li><a class="dropdown-item bi bi-type-h4" onclick="heading(4)"></a></li>
+                        <li><a class="dropdown-item bi bi-type-h5" onclick="heading(5)"></a></li>
+                        <li><a class="dropdown-item bi bi-type-h6" onclick="heading(6)"></a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-light" onclick="wrap('**','**')" title="粗体">
+                    <i class="bi bi-type-bold"></i>
+                </button>
+                <button class="btn btn-light" onclick="wrap('*','*')" title="斜体">
+                    <i class="bi bi-type-italic"></i>
+                </button>
+                <button class="btn btn-light" onclick="wrap('~~','~~')" title="删除线">
+                    <i class="bi bi-type-strikethrough"></i>
+                </button>
+                <button class="btn btn-light" onclick="wrap('`','`')" title="行内代码">
+                    <i class="bi bi-code"></i>
+                </button>
+                <button class="btn btn-light" onclick="codeBlock()" title="代码块">
+                    <i class="bi bi-file-code"></i>
+                </button>
+                <button class="btn btn-light" onclick="insert('> ')" title="引用">
+                    <i class="bi bi-blockquote-left"></i>
+                </button>
+                <button class="btn btn-light" onclick="insert('- ')" title="无序列表">
+                    <i class="bi bi-list-ul"></i>
+                </button>
+                <button class="btn btn-light" onclick="insert('1. ')" title="有序列表">
+                    <i class="bi bi-list-ol"></i>
+                </button>
+                <button class="btn btn-light" onclick="insert('- [ ] ')" title="任务列表">
+                    <i class="bi bi-check2-square"></i>
+                </button>
+                <button class="btn btn-light" onclick="insert('---\n')" title="分隔线">
+                    <i class="bi bi-hr"></i>
+                </button>
+                <button class="btn btn-light" onclick="link()" title="链接">
+                    <i class="bi bi-link-45deg"></i>
+                </button>
+                <button class="btn btn-light" onclick="emoji()" title="表情">
+                    <i class="bi bi-emoji-smile"></i>
+                </button>
+                <button class="btn btn-light" onclick="undo()" title="撤销">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+                <button class="btn btn-light" onclick="redo()" title="重做">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                <button class="btn btn-light" onclick="fullscreen()" title="全屏">
+                    <i class="bi bi-arrows-fullscreen"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <!--            <textarea id="editor" class="form-control vh-100"></textarea>-->
+            <div class="form-floating ">
+                <textarea class="form-control vh-100 mb-1" id="editor" placeholder=" "></textarea>
+                <label class="fs-6 text-center w-100" for="editor">Markdown 编辑器</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="vh-100" id="preview"></div>
+        </div>
+    </div>
+</section>
+<th:block th:fragment="scripts">
+    <script th:src="@{/webjars/markdown-it/14.1.0/dist/markdown-it.js}"></script>
+    <script th:src="@{/webjars/highlightjs/11.11.1/highlight.min.js}"></script>
+    <script th:src="@{/webjars/markdown-it-emoji/1.4.0/dist/markdown-it-emoji-light.js}"></script>
+    <script th:src="@{/js/admin.js}"></script>
+</th:block>
 </html>

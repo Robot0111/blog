@@ -21,15 +21,27 @@ public class Security {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login","/css/**", "/js/**", "/images/**","/webjars/**")
-                        .permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/login","/css/**", "/js/**", "/images/**","/webjars/**")
+//                        .permitAll()
+//                        .requestMatchers("/admin/**").hasRole("ADMIN")
+//                        .anyRequest().authenticated()
+                                .requestMatchers(
+                                        "/",
+                                        "/home",
+                                        "/login",
+                                        "/error",
+                                        "/css/**",
+                                        "/js/**",
+                                        "/images/**",
+                                        "/webjars/**"
+                                ).permitAll()
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/home",true)
+                        .defaultSuccessUrl("/admin")
                         .permitAll()
                 )
                 .logout(logout -> logout

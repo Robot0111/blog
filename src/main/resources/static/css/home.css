@@ -31,10 +31,29 @@ body {
 #preview{
     overflow:auto;
     border:1px solid #ddd;
-    padding:15px;
-    background:#fafafa;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
 }
-
-.fullscreen #editor, .fullscreen #preview{
-    height:90vh;
+#preview img {
+    max-width: 25%;
+    height: auto;
+    border-radius: 6px;
+    margin: 12px 0;
+}
+#preview pre {
+    color: rgb(194, 189, 183);
+    /*background-color: rgb(36, 37, 38) !important;*/
+    /*border-color: rgb(65, 71, 73) !important;*/
+    display: block;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    word-break: break-all;
+    word-wrap: break-word;
+    border-radius: 4px;
+}
+#preview blockquote {
+    border-left: 5px solid #757171;
+    padding-left: 12px;
+    color: #ffffff;
 }

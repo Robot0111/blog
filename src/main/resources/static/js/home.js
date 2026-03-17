@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
     const html = document.documentElement;
     const toggleBtn = document.getElementById("themeToggle");
@@ -13,8 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         html.setAttribute("data-bs-theme", prefersDark ? "dark" : "light");
     }
-
-
+     extracted(savedTheme);
     updateIcon();
 
     // ===== 3. 点击切换 =====
@@ -26,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
         html.setAttribute("data-bs-theme", newTheme);
         localStorage.setItem("theme", newTheme);
 
+        extracted(newTheme);
         updateIcon();
     });
 
@@ -38,6 +37,15 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             icon.classList.remove("bi-sun");
             icon.classList.add("bi-moon");
+        }
+    }
+
+    function extracted(Theme) {
+        const link = document.getElementById("change-codeTheme");
+        if (link) {
+            link.href = Theme === "dark"
+                ? "/webjars/highlightjs/11.11.1/styles/github-dark.min.css"
+                : "/webjars/highlightjs/11.11.1/styles/github.min.css";
         }
     }
 });

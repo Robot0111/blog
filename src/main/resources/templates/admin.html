@@ -8,66 +8,39 @@
 <section th:fragment="markdown">
     <div class="row">
         <div class="toolbar mb-2 row align-items-center d-flex justify-content-between p-0">
-            <div class="btn-toolbar ">
+            <div class="btn-toolbar toolbar">
+
                 <div class="btn-group dropstart">
-                    <button class="btn btn-secondary  dropdown-toggle"
+                    <button class="btn btn-secondary dropdown-toggle"
                             data-bs-toggle="dropdown" title="标题">
                         <i class="bi bi-type"></i>
                     </button>
-                    <ul class="dropdown-menu" style="min-width: 50px; max-width: 50px;">
-                        <li><a class="dropdown-item bi bi-type-h1" onclick="heading(1)"></a></li>
-                        <li><a class="dropdown-item bi bi-type-h2" onclick="heading(2)"></a></li>
-                        <li><a class="dropdown-item bi bi-type-h3" onclick="heading(3)"></a></li>
-                        <li><a class="dropdown-item bi bi-type-h4" onclick="heading(4)"></a></li>
-                        <li><a class="dropdown-item bi bi-type-h5" onclick="heading(5)"></a></li>
-                        <li><a class="dropdown-item bi bi-type-h6" onclick="heading(6)"></a></li>
+                    <ul class="dropdown-menu" style="min-width: 50px;">
+                        <li><a class="dropdown-item" data-action="h1">H1</a></li>
+                        <li><a class="dropdown-item" data-action="h2">H2</a></li>
+                        <li><a class="dropdown-item" data-action="h3">H3</a></li>
+                        <li><a class="dropdown-item" data-action="h4">H4</a></li>
+                        <li><a class="dropdown-item" data-action="h5">H5</a></li>
+                        <li><a class="dropdown-item" data-action="h6">H6</a></li>
                     </ul>
                 </div>
-                <button class="btn btn-outline-secondary" onclick="wrap('**','**')" title="粗体">
-                    <i class="bi bi-type-bold"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="wrap('*','*')" title="斜体">
-                    <i class="bi bi-type-italic"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="wrap('~~','~~')" title="删除线">
-                    <i class="bi bi-type-strikethrough"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="wrap('`','`')" title="行内代码">
-                    <i class="bi bi-code"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="codeBlock()" title="代码块">
-                    <i class="bi bi-file-code"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="insert('> ')" title="引用">
-                    <i class="bi bi-blockquote-left"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="insert('- ')" title="无序列表">
-                    <i class="bi bi-list-ul"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="insert('1. ')" title="有序列表">
-                    <i class="bi bi-list-ol"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="insert('- [ ] ')" title="任务列表">
-                    <i class="bi bi-check2-square"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="insert('---\n')" title="分隔线">
-                    <i class="bi bi-hr"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="link()" title="链接">
-                    <i class="bi bi-link-45deg"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="emoji()" title="表情">
-                    <i class="bi bi-emoji-smile"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="undo()" title="撤销">
-                    <i class="bi bi-arrow-counterclockwise"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="redo()" title="重做">
-                    <i class="bi bi-arrow-clockwise"></i>
-                </button>
-                <button class="btn btn-outline-secondary" onclick="fullscreen()" title="全屏">
-                    <i class="bi bi-arrows-fullscreen"></i>
-                </button>
+
+                <button class="btn btn-outline-secondary" data-action="bold"><i class="bi bi-type-bold"></i></button>
+                <button class="btn btn-outline-secondary" data-action="italic"><i class="bi bi-type-italic"></i></button>
+                <button class="btn btn-outline-secondary" data-action="strike"><i class="bi bi-type-strikethrough"></i></button>
+                <button class="btn btn-outline-secondary" data-action="inline-code"><i class="bi bi-code"></i></button>
+                <button class="btn btn-outline-secondary" data-action="code"><i class="bi bi-file-code"></i></button>
+                <button class="btn btn-outline-secondary" data-action="quote"><i class="bi bi-blockquote-left"></i></button>
+                <button class="btn btn-outline-secondary" data-action="ul"><i class="bi bi-list-ul"></i></button>
+                <button class="btn btn-outline-secondary" data-action="ol"><i class="bi bi-list-ol"></i></button>
+                <button class="btn btn-outline-secondary" data-action="task"><i class="bi bi-check2-square"></i></button>
+                <button class="btn btn-outline-secondary" data-action="hr"><i class="bi bi-hr"></i></button>
+                <button class="btn btn-outline-secondary" data-action="link"><i class="bi bi-link-45deg"></i></button>
+                <button class="btn btn-outline-secondary" data-action="emoji"><i class="bi bi-emoji-smile"></i></button>
+                <button class="btn btn-outline-secondary" data-action="undo"><i class="bi bi-arrow-counterclockwise"></i></button>
+                <button class="btn btn-outline-secondary" data-action="redo"><i class="bi bi-arrow-clockwise"></i></button>
+                <button class="btn btn-outline-secondary" data-action="fullscreen"><i class="bi bi-arrows-fullscreen"></i></button>
+
             </div>
         </div>
     </div>
@@ -75,12 +48,12 @@
         <div class="col-md-6">
             <!--            <textarea id="editor" class="form-control vh-100"></textarea>-->
             <div class="form-floating ">
-                <textarea class="form-control vh-100 mb-1" id="editor" placeholder=" "></textarea>
+                <textarea class="form-control  mb-1" id="editor" placeholder=" "></textarea>
                 <label class="fs-6 text-center w-100" for="editor">Markdown 编辑器</label>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="vh-100" id="preview" ></div>
+            <div id="preview" ></div>
         </div>
     </div>
 </section>

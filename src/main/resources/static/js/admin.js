@@ -50,7 +50,7 @@ function getCursorLine(textarea) {
 }
 editor.addEventListener("keyup", syncCursor);
 editor.addEventListener("click", syncCursor);
-
+let cursorPos = 0
 function syncCursor() {
     const line = getCursorLine(editor);
 
@@ -59,6 +59,12 @@ function syncCursor() {
     if (!target) return;
 
     scrollIntoViewIfNeeded(preview, target);
+
+
+
+    editor.addEventListener("keyup", () => {
+        cursorPos = editor.selectionStart
+    })
 
 }
 function scrollIntoViewIfNeeded(container, element) {
@@ -151,33 +157,115 @@ function wrap(start, end) {
     editor.focus()
     render()
 }
-
+function heading(level) {
+    const prefix = "#".repeat(level) + " "
+    insert(prefix)
+}
 function insert(text) {
-    const s = editor.selectionStart
+    const start = cursorPos
+    const end = editor.selectionEnd
     const val = editor.value
+
     editor.value =
-        val.substring(0, s) +
+        val.substring(0, start) +
         text +
-        val.substring(s)
+        val.substring(end)
+
+    // ⭐ 光标移动到插入内容后面
+    const newPos = start + text.length
+    editor.setSelectionRange(newPos, newPos)
 
     editor.focus()
+
     render()
 }
 
-function heading(level) {
-    insert("#".repeat(level) + " ")
-}
+document.querySelector(".toolbar").addEventListener("mousedown", function (e) {
+    const btn = e.target.closest("[data-action]")
+    if (!btn) return
 
-function codeBlock() {
-    insert("```\n\n```")
-}
+    e.preventDefault() // ⭐ 防止光标丢失
 
-function link() {
-    insert("[文字](https://)")
-}
+    const action = btn.dataset.action
 
-function emoji() {
-    insert(":smile:")
+    handleAction(action)
+})
+function handleAction(action) {
+    switch (action) {
+
+        case "bold":
+            wrap("**", "**")
+            break
+
+        case "italic":
+            wrap("*", "*")
+            break
+
+        case "strike":
+            wrap("~~", "~~")
+            break
+
+        case "inline-code":
+            wrap("`", "`")
+            break
+
+        case "code":
+            insert("```\n\n```")
+            break
+
+        case "quote":
+            insert("> ")
+            break
+
+        case "ul":
+            insert("- ")
+            break
+
+        case "ol":
+            insert("1. ")
+            break
+
+        case "task":
+            insert("- [ ] ")
+            break
+
+        case "hr":
+            insert("\n---\n")
+            break
+
+        case "link":
+            insert("[文字](https://)")
+            break
+
+        case "emoji":
+            insert(":smile:")
+            break
+
+        case "undo":
+            undo()
+            break
+
+        case "redo":
+            redo()
+            break
+
+        case "fullscreen":
+            fullscreen()
+            break
+
+        // 标题
+        case "h1":
+        case "h2":
+        case "h3":
+        case "h4":
+        case "h5":
+        case "h6":
+            heading(parseInt(action[1]))
+            break
+
+        default:
+            console.warn("未知操作:", action)
+    }
 }
 
 let history = []

@@ -1,3 +1,8 @@
+// function test(){
+//     const editor = document.getElementById("editor")
+// const preview = document.getElementById("preview")
+//     preview.innerHTML = editor.value;
+// }
 const md = window.markdownit({
 
     html: true,
@@ -38,63 +43,60 @@ md.core.ruler.push("line_numbers", function (state) {
 });
 const editor = document.getElementById("editor")
 const preview = document.getElementById("preview")
-function getCursorLine(textarea) {
-    const value = textarea.value;
-    const cursorPos = textarea.selectionStart;
+// function getCursorLine(textarea) {
+//     const value = textarea.value;
+//     const cursorPos = textarea.selectionStart;
+//
+//     // 截取光标前的内容
+//     const textBefore = value.substring(0, cursorPos);
+//
+//     // 统计换行数量
+//     return textBefore.split('\n').length - 1;
+// }
+// editor.addEventListener("keyup", syncCursor);
+// editor.addEventListener("click", syncCursor);
+// let cursorPos = 0
+// function syncCursor() {
+//     const line = getCursorLine(editor);
+//     const target = lineMap.get(line);
+//     if (!target) return;
+//
+//     scrollIntoViewIfNeeded(preview, target);
+//
+//     editor.addEventListener("keyup", () => {
+//         cursorPos = editor.selectionStart
+//     })
+//
+// }
 
-    // 截取光标前的内容
-    const textBefore = value.substring(0, cursorPos);
-
-    // 统计换行数量
-    return textBefore.split('\n').length - 1;
-}
-editor.addEventListener("keyup", syncCursor);
-editor.addEventListener("click", syncCursor);
-let cursorPos = 0
-function syncCursor() {
-    const line = getCursorLine(editor);
-
-
-    const target = lineMap.get(line);
-    if (!target) return;
-
-    scrollIntoViewIfNeeded(preview, target);
-
-
-
-    editor.addEventListener("keyup", () => {
-        cursorPos = editor.selectionStart
-    })
-
-}
-function scrollIntoViewIfNeeded(container, element) {
-    const cTop = container.scrollTop;
-    const cBottom = cTop + container.clientHeight;
-
-    const eTop = element.offsetTop;
-    const eBottom = eTop + element.offsetHeight;
-
-    // ✅ 已经完全可见 → 不动
-    if (eTop >= cTop && eBottom <= cBottom) {
-        return;
-    }
-
-    // ⬆️ 在上面 → 滚到顶部
-    if (eTop < cTop) {
-        container.scrollTo({
-            top: eTop - 20, // 留点间距
-            behavior: "smooth"
-        });
-    }
-
-    // ⬇️ 在下面 → 滚到下面
-    else if (eBottom > cBottom) {
-        container.scrollTo({
-            top: eBottom - container.clientHeight + 20,
-            behavior: "smooth"
-        });
-    }
-}
+// function scrollIntoViewIfNeeded(container, element) {
+//     const cTop = container.scrollTop;
+//     const cBottom = cTop + container.clientHeight;
+//
+//     const eTop = element.offsetTop;
+//     const eBottom = eTop + element.offsetHeight;
+//
+//     // ✅ 已经完全可见 → 不动
+//     if (eTop >= cTop && eBottom <= cBottom) {
+//         return;
+//     }
+//
+//     // ⬆️ 在上面 → 滚到顶部
+//     if (eTop < cTop) {
+//         container.scrollTo({
+//             top: eTop - 20, // 留点间距
+//             behavior: "smooth"
+//         });
+//     }
+//
+//     // ⬇️ 在下面 → 滚到下面
+//     else if (eBottom > cBottom) {
+//         container.scrollTo({
+//             top: eBottom - container.clientHeight + 20,
+//             behavior: "smooth"
+//         });
+//     }
+// }
 // 渲染
 function render() {
     let text = editor.value

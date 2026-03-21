@@ -1,3 +1,21 @@
+function updateLayout() {
+    const nav = document.getElementById("nav")
+    const tool = document.getElementById("markdownTool")
+    const footer = document.querySelector("footer");
+
+    const navHeight = nav ? nav.offsetHeight : 0;
+    const toolHeight = nav ? tool.offsetHeight : 0;
+    const footerHeight = footer ? nav.offsetHeight : 0;
+
+    document.documentElement.style.setProperty(
+        "--nav-height",
+        navHeight + toolHeight + footerHeight + "px"
+    );
+}
+
+// 页面加载 + 窗口变化都执行
+window.addEventListener("load", updateLayout);
+window.addEventListener("resize", updateLayout);
 document.addEventListener("DOMContentLoaded", function () {
     const html = document.documentElement;
     const toggleBtn = document.getElementById("themeToggle");

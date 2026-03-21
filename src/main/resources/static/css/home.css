@@ -1,6 +1,20 @@
+
 body {
     font-family: "KaiTi", "STKaiti", serif;
+    overflow: hidden; /* 强制只让局部区域滚动 */
     font-size: 18px;
+    height: 100%;
+    margin: 0;
+}
+.main-wrapper .row.flex-grow-1 {
+    flex: 1;
+    min-height: 0; /* 关键：允许 row 缩小到小于内容的高度 */
+}
+
+/* 2. 确保 Col 容器也是 flex 布局且高度受限 */
+.col-md-6.d-flex.flex-column {
+    height: 100%;
+    min-height: 0; /* 关键 */
 }
 .theme-fab {
     position: fixed;
@@ -23,16 +37,7 @@ body {
     color: #6db33f !important;   /* Bootstrap success 绿色 */
 }
 
-#editor{
-    font-family:monospace;
-}
 
-#preview{
-    overflow:auto;
-    border:1px solid #ddd;
-    background-color: var(--bs-body-bg);
-    color: var(--bs-body-color);
-}
 #preview img {
     max-width: 25%;
     height: auto;
@@ -41,8 +46,6 @@ body {
 }
 #preview pre {
     color: rgb(194, 189, 183);
-    /*background-color: rgb(36, 37, 38) !important;*/
-    /*border-color: rgb(65, 71, 73) !important;*/
     display: block;
     margin: 0 0 10px;
     font-size: 13px;
@@ -55,4 +58,41 @@ body {
     border-left: 5px solid #757171;
     padding-left: 12px;
     color: #ffffff;
+}
+
+/* 编辑器 */
+#editor {
+    font-family: monospace;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* 预览 */
+#preview {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    box-sizing: border-box;
+    max-height: 100%;   /* ⭐关键：防止被撑开 */
+}
+
+:root {
+    --nav-height: 56px; /* 默认值 */
+}
+.main-wrapper {
+    height: calc(100vh - var(--nav-height));
+    overflow: hidden; /* 关键：禁止 main 自己滚动 */
+    display: flex;
+    flex-direction: column;
+}
+.content-wrapper {
+    flex: 1;
+    display: flex;
+    min-height: 0;   /* ⭐关键（很多人卡在这） */
+}
+.form-floating {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }

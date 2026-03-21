@@ -5,8 +5,8 @@
     <link id="change-codeTheme" rel="stylesheet" th:href="@{/webjars/highlightjs/11.11.1/styles/github.min.css}">
     <link rel="stylesheet" th:href="@{/webjars/katex/0.6.0/dist/katex.min.css}">
 </th:block>
-<section th:fragment="markdown">
-    <div class="row">
+<section th:fragment="markdown" class="h-100 d-flex flex-column">
+    <div class="row" id="markdownTool">
         <div class="toolbar mb-2 row align-items-center d-flex justify-content-between p-0">
             <div class="btn-toolbar toolbar">
 
@@ -25,7 +25,7 @@
                     </ul>
                 </div>
 
-                <button class="btn btn-outline-secondary" data-action="bold"><i class="bi bi-type-bold"></i></button>
+                <button class="btn btn-outline-secondary" onclick="test()" data-action="bold"><i class="bi bi-type-bold"></i></button>
                 <button class="btn btn-outline-secondary" data-action="italic"><i class="bi bi-type-italic"></i></button>
                 <button class="btn btn-outline-secondary" data-action="strike"><i class="bi bi-type-strikethrough"></i></button>
                 <button class="btn btn-outline-secondary" data-action="inline-code"><i class="bi bi-code"></i></button>
@@ -44,16 +44,18 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-6">
+    <div class="row flex-grow-1">
+        <div class="col-md-6 d-flex flex-column">
             <!--            <textarea id="editor" class="form-control vh-100"></textarea>-->
             <div class="form-floating ">
                 <textarea class="form-control  mb-1" id="editor" placeholder=" "></textarea>
                 <label class="fs-6 text-center w-100" for="editor">Markdown 编辑器</label>
             </div>
+
         </div>
-        <div class="col-md-6">
-            <div id="preview" ></div>
+
+        <div class="col-md-6 d-flex flex-column" style="overflow: hidden;">
+            <div id="preview"></div>
         </div>
     </div>
 </section>

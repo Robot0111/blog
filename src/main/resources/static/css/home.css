@@ -15,6 +15,7 @@ body {
 .col-md-6.d-flex.flex-column {
     height: 100%;
     min-height: 0; /* 关键 */
+    overflow: hidden;
 }
 .theme-fab {
     position: fixed;
@@ -96,3 +97,51 @@ body {
     flex-direction: column;
     height: 100%;
 }
+/* 额外的小微调 */
+#markdownTool .bg-body-secondary:hover {
+    background-color: #e9ecef;
+    color: #0d6efd;
+}
+#markdownTool .btn:hover {
+    background-color: var(--bs-tertiary-bg); /* 使用变量确保 hover 颜色也适配 */
+    filter: brightness(0.9); /* 稍微变暗增加点击感 */
+}
+#markdownTool .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 1.1rem; /* 让图标稍微大一点点更好点 */
+}
+/* 确保图标颜色跟随文字颜色 */
+#markdownTool .bi {
+    color: inherit;
+}
+/* 移除下拉箭头（可选，让工具栏更整洁） */
+.no-caret::after {
+    display: none !important;
+}
+
+/* 1. 默认情况下保持隐藏，只有当 Bootstrap 添加 .show 类时才变为 grid */
+.dropdown-menu.emoji-grid.show {
+    display: grid !important; /* 只有显示时才开启网格 */
+    grid-template-columns: repeat(4, 35px); /* 固定列宽让面板更整齐 */
+    gap: 2px;
+    padding: 8px;
+    justify-content: center;
+}
+
+/* 2. 移除按钮的小箭头（可选，保持工具栏紧凑） */
+.no-caret::after {
+    display: none !important;
+}
+
+/* 3. 让表情按钮更像方块 */
+.emoji-grid .dropdown-item {
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 4px;
+    background: transparent;
+}
+
+.emoji-grid .dropdown-item:hover {
+    background-color: var(--bs-tertiary-bg);
+}
+

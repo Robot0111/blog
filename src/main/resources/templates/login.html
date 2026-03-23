@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
@@ -27,15 +27,16 @@
 							<div class="mb-3">
 								<div class="input-group">
 									<label for="password" class="visually-hidden">密码</label>
-									<input class="form-control"
-										   id="password" name="password"
-										   placeholder="密码"
+									<input class="form-control" id="password" name="password" placeholder="密码"
 										   type="password">
-									<button class="btn btn-outline-primary"
-											onclick="togglePassword(this)"
+									<button class="btn btn-outline-primary" onclick="togglePassword(this)"
 											type="button">
 										<i class="bi bi-eye"></i>
 									</button>
+								</div>
+								<div class="form-check form-switch d-flex justify-content-end align-items-center mt-2 gap-2">
+									<label class="form-check-label" for="switchCheckDefault">记住我</label>
+									<input class="form-check-input ms-0" th:name="remember-me" type="checkbox" role="switch" id="switchCheckDefault">
 								</div>
 								<div class="form-text mt-2">
 
@@ -53,7 +54,7 @@
 
 								</div>
 							</div>
-							<button class="btn btn-success w-100" type="submit">登录</button>
+							<button class="btn btn-success w-100"  type="submit">登录</button>
 						</form>
 					</div>
 				</div>

@@ -17,16 +17,8 @@ CREATE TABLE blog_article
     update_time    TIMESTAMP  DEFAULT current_timestamp,
     CONSTRAINT pk_blog_article PRIMARY KEY (id)
 )
-    TABLESPACE users LOB (content_md) STORE AS SECUREFILE
-(
-    TABLESPACE
-    users
-)
-    LOB (content_html) STORE AS SECUREFILE
-(
-    TABLESPACE
-    users
-);
+    TABLESPACE users LOB (content_md) STORE AS SECUREFILE(TABLESPACE users)
+    LOB (content_html) STORE AS SECUREFILE(TABLESPACE users);
 
 --分类表
 CREATE TABLE blog_category
@@ -52,9 +44,7 @@ CREATE TABLE BLOG_ARTICLE_TAG
     ARTICLE_ID NUMBER(19),
     TAG_ID     NUMBER(10),
     CONSTRAINT PK_ARTICLE_TAG PRIMARY KEY (ARTICLE_ID, TAG_ID),
-
     CONSTRAINT FK_ARTICLE_TAG_ARTICLE FOREIGN KEY (ARTICLE_ID) REFERENCES BLOG_ARTICLE (ID),
-
     CONSTRAINT FK_ARTICLE_TAG_TAG FOREIGN KEY (TAG_ID) REFERENCES BLOG_TAG (ID)
 )
     TABLESPACE USERS;
@@ -68,7 +58,6 @@ CREATE TABLE BLOG_COMMENT
     WEBSITE     VARCHAR2(200),
     CONTENT     VARCHAR2(2000),
     PARENT_ID   NUMBER(19),
-
     CREATE_TIME TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT PK_BLOG_COMMENT PRIMARY KEY (ID),
     CONSTRAINT FK_COMMENT_ARTICLE FOREIGN KEY (ARTICLE_ID) REFERENCES BLOG_ARTICLE (ID)
@@ -79,3 +68,61 @@ CREATE INDEX IDX_ARTICLE_CONTENT
     ON BLOG_ARTICLE (CONTENT_MD)
     INDEXTYPE IS CTXSYS.CONTEXT
     PARAMETERS ('SYNC (ON COMMIT)');
+
+CREATE TABLE persistent_logins (
+    username varchar(64) not null,
+    series varchar(64) primary key,
+    token varchar(64) not null,
+    last_used timestamp not null
+);
+-- 1. 博客文章表备注
+COMMENT ON TABLE blog_article IS '博客文章主表';
+COMMENT ON COLUMN blog_article.id IS '主键ID';
+COMMENT ON COLUMN blog_article.title IS '文章标题';
+COMMENT ON COLUMN blog_article.summary IS '文章摘要';
+COMMENT ON COLUMN blog_article.sub_url IS '自定义访问路径';
+COMMENT ON COLUMN blog_article.cover_image IS '封面图URL';
+COMMENT ON COLUMN blog_article.content_md IS 'Markdown原文内容';
+COMMENT ON COLUMN blog_article.content_html IS '生成的HTML内容';
+COMMENT ON COLUMN blog_article.category_id IS '关联分类ID';
+COMMENT ON COLUMN blog_article.status IS '状态: 0-草稿, 1-已发布';
+COMMENT ON COLUMN blog_article.views IS '阅读量';
+COMMENT ON COLUMN blog_article.enable_comment IS '是否允许评论: 0-否, 1-是';
+COMMENT ON COLUMN blog_article.is_deleted IS '逻辑删除: 0-未删, 1-已删';
+COMMENT ON COLUMN blog_article.create_time IS '创建时间';
+COMMENT ON COLUMN blog_article.update_time IS '更新时间';
+
+-- 2. 分类表备注
+COMMENT ON TABLE blog_category IS '文章分类表';
+COMMENT ON COLUMN blog_category.id IS '分类ID';
+COMMENT ON COLUMN blog_category.name IS '分类名称';
+COMMENT ON COLUMN blog_category.description IS '分类描述';
+COMMENT ON COLUMN blog_category.create_time IS '创建时间';
+
+-- 3. 标签表备注
+COMMENT ON TABLE blog_tag IS '文章标签表';
+COMMENT ON COLUMN blog_tag.id IS '标签ID';
+COMMENT ON COLUMN blog_tag.name IS '标签名称';
+
+-- 4. 文章标签关系表备注
+COMMENT ON TABLE blog_article_tag IS '文章与标签多对多中间表';
+COMMENT ON COLUMN blog_article_tag.article_id IS '文章ID';
+COMMENT ON COLUMN blog_article_tag.tag_id IS '标签ID';
+
+-- 5. 评论表备注
+COMMENT ON TABLE blog_comment IS '文章评论表';
+COMMENT ON COLUMN blog_comment.id IS '评论ID';
+COMMENT ON COLUMN blog_comment.article_id IS '所属文章ID';
+COMMENT ON COLUMN blog_comment.nickname IS '评论者昵称';
+COMMENT ON COLUMN blog_comment.email IS '评论者邮箱';
+COMMENT ON COLUMN blog_comment.website IS '评论者个人网站';
+COMMENT ON COLUMN blog_comment.content IS '评论内容';
+COMMENT ON COLUMN blog_comment.parent_id IS '父评论ID (用于回复功能)';
+COMMENT ON COLUMN blog_comment.create_time IS '评论时间';
+
+-- 6. Spring Security 记住我 (Remember-Me) 持久化登录表备注
+COMMENT ON TABLE persistent_logins IS 'Spring Security 记住我持久化登录信息表';
+COMMENT ON COLUMN persistent_logins.username IS '用户名';
+COMMENT ON COLUMN persistent_logins.series IS '唯一序列号 (主键)';
+COMMENT ON COLUMN persistent_logins.token IS '身份令牌';
+COMMENT ON COLUMN persistent_logins.last_used IS '最后一次登录使用时间';

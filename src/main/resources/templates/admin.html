@@ -6,11 +6,13 @@
     <link rel="stylesheet" th:href="@{/webjars/katex/0.6.0/dist/katex.min.css}">
 </th:block>
 <section th:fragment="markdown" class="h-100 d-flex flex-column">
+
     <div class="row justify-content-center" id="markdownTool">
+
         <!-- 1. 添加了 w-auto 使容器宽度自适应内容，mx-auto 实现居中 -->
         <!-- 2. 添加了 shadow-sm, border, rounded-pill 让它看起来像个独立的浮动工具栏 -->
         <div class="toolbar d-flex align-items-center justify-content-center p-1 border rounded-pill shadow-sm bg-body-secondary w-auto">
-
+            <button class="btn btn-sm bg-body-secondary border-0" id="save" title="保存"><i class="bi bi-floppy"></i></button>
             <div class="btn-group me-1">
                 <button class="btn btn-sm bg-body-secondary dropdown-toggle border-0" data-bs-toggle="dropdown" title="标题">
                     <i class="bi bi-type"></i>
@@ -24,7 +26,7 @@
 
             <!-- 使用 btn-group 结合 btn-sm 让按钮更紧凑 -->
             <div class="btn-group">
-                <button class="btn btn-sm bg-body-secondary border-0" onclick="test()" data-action="bold" title="加粗"><i class="bi bi-type-bold"></i></button>
+                <button class="btn btn-sm bg-body-secondary border-0" data-action="bold" title="加粗"><i class="bi bi-type-bold"></i></button>
                 <button class="btn btn-sm bg-body-secondary border-0" data-action="italic" title="斜体"><i class="bi bi-type-italic"></i></button>
                 <button class="btn btn-sm bg-body-secondary border-0" data-action="strike" title="删除线"><i class="bi bi-type-strikethrough"></i></button>
                 <button class="btn btn-sm bg-body-secondary border-0" data-action="inline-code" title="行内代码"><i class="bi bi-code"></i></button>
@@ -72,12 +74,10 @@
     </div>
     <div class="row flex-grow-1">
         <div class="col-md-6 d-flex flex-column">
-            <!--            <textarea id="editor" class="form-control vh-100"></textarea>-->
             <div class="form-floating ">
                 <textarea class="form-control  mb-1" id="editor" placeholder=" "></textarea>
                 <label class="fs-6 text-center w-100" for="editor">Markdown 编辑器</label>
             </div>
-
         </div>
 
         <div class="col-md-6 d-flex flex-column">
@@ -86,18 +86,6 @@
     </div>
 </section>
 <th:block th:fragment="scripts">
-    <script th:src="@{/webjars/markdown-it/14.1.0/dist/markdown-it.js}"></script>
-    <script th:src="@{/webjars/katex/0.6.0/dist/katex.min.js}"></script>
-    <script th:src="@{/webjars/katex/0.6.0/dist/contrib/auto-render.min.js}"></script>
-    <script th:src="@{/webjars/highlightjs/11.11.1/highlight.min.js}"></script>
-    <script th:src="@{/webjars/markdown-it-emoji/1.4.0/dist/markdown-it-emoji-light.js}"></script>
-    <script th:src="@{/webjars/markdown-it-sub/1.0.0/dist/markdown-it-sub.js}"></script>
-    <script th:src="@{/webjars/markdown-it-sup/1.0.0/dist/markdown-it-sup.js}"></script>
-    <script th:src="@{/webjars/markdown-it-footnote/2.0.0/dist/markdown-it-footnote.js}"></script>
-    <script th:src="@{/webjars/markdown-it-deflist/2.1.0/dist/markdown-it-deflist.js}"></script>
-    <script th:src="@{/webjars/markdown-it-abbr/1.0.4/dist/markdown-it-abbr.js}"></script>
-    <script th:src="@{/webjars/markdown-it-ins/2.0.0/dist/markdown-it-ins.js}"></script>
-    <script th:src="@{/webjars/markdown-it-mark/2.0.0/dist/markdown-it-mark.js}"></script>
     <script th:src="@{/js/admin.js}"></script>
 </th:block>
 </html>

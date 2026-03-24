@@ -27,6 +27,18 @@
   <div th:replace="~{layout/footer :: footer}"></div>
 
 <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/webjars/markdown-it/14.1.0/dist/markdown-it.js}"></script>
+  <script th:src="@{/webjars/katex/0.6.0/dist/katex.min.js}"></script>
+  <script th:src="@{/webjars/katex/0.6.0/dist/contrib/auto-render.min.js}"></script>
+  <script th:src="@{/webjars/highlightjs/11.11.1/highlight.min.js}"></script>
+  <script th:src="@{/webjars/markdown-it-emoji/1.4.0/dist/markdown-it-emoji-light.js}"></script>
+  <script th:src="@{/webjars/markdown-it-sub/1.0.0/dist/markdown-it-sub.js}"></script>
+  <script th:src="@{/webjars/markdown-it-sup/1.0.0/dist/markdown-it-sup.js}"></script>
+  <script th:src="@{/webjars/markdown-it-footnote/2.0.0/dist/markdown-it-footnote.js}"></script>
+  <script th:src="@{/webjars/markdown-it-deflist/2.1.0/dist/markdown-it-deflist.js}"></script>
+  <script th:src="@{/webjars/markdown-it-abbr/1.0.4/dist/markdown-it-abbr.js}"></script>
+  <script th:src="@{/webjars/markdown-it-ins/2.0.0/dist/markdown-it-ins.js}"></script>
+  <script th:src="@{/webjars/markdown-it-mark/2.0.0/dist/markdown-it-mark.js}"></script>
   <!-- 页面专属JS -->
   <th:block th:replace="${scripts}"></th:block>
 <script th:src="@{/js/home.js}"></script>

@@ -1,10 +1,33 @@
-// function test(){
-//     const editor = document.getElementById("editor")
-// const preview = document.getElementById("preview")
-//     preview.innerHTML = editor.value;
-// }
-const md = window.markdownit({
 
+
+// 假设你点击那个带有 'bi-floppy' 图标的保存按钮
+const saveBtn = document.getElementById("save")
+
+saveBtn.addEventListener('click', () => {
+
+    // 构建表单数据
+    const payload = {
+        contentMd: document.getElementById('editor').value,
+        contentHtml: document.getElementById('preview').innerHTML,
+        // categoryId: document.getElementById('categorySelect').value,
+        categoryId: 1,
+        tagIds: getSelectedTagIds() // 获取选中的标签 ID 数组
+    };
+
+    fetch('/api/articles/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+        .then(res => res.ok ? alert("保存成功") :res.toString())
+        .catch(err => console.error("提交失败:", err));
+});
+
+function getSelectedTagIds() {
+return [1,2,3,4];
+}
+
+const md = window.markdownit({
     html: true,
     linkify: true,
     typographer: true,
@@ -262,8 +285,6 @@ function handleAction(action) {
         case "h4":
             heading(parseInt(action[1]))
             break
-
-
         default:
             insert(action)
     }

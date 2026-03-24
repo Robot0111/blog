@@ -6,6 +6,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public class ModernJdbcTokenRepository implements PersistentTokenRepository {
@@ -30,14 +31,19 @@ public class ModernJdbcTokenRepository implements PersistentTokenRepository {
 
     @Override
     public PersistentRememberMeToken getTokenForSeries(@NonNull String seriesId) {
-        return jdbcTemplate.queryForObject(
-                "select username, series, token, last_used from persistent_logins where series = ?",
+        String sql = "select username, series, token, last_used from persistent_logins where series = ?";
+
+        List<PersistentRememberMeToken> tokens = jdbcTemplate.query(
+                sql,
                 (rs, rowNum) -> new PersistentRememberMeToken(
                         rs.getString("username"),
                         rs.getString("series"),
                         rs.getString("token"),
                         rs.getTimestamp("last_used")),
                 seriesId);
+
+        // 如果列表为空，返回 null 是符合 Spring Security 接口约定的
+        return tokens.isEmpty() ? null : tokens.getFirst();
     }
 
     @Override

@@ -1,0 +1,222 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: layout(~{::tag}, ~{},~{})}">
+<section class="row" th:fragment="tag">
+    <div class="container-fluid mt-3 mx-auto" >
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex gap-2" style="width: 450px;">
+                <div class="input-group input-group-sm">
+                    <input type="text" id="searchInput" class="form-control" th:placeholder="|输入${pageTitle}搜索...|">
+                    <button class="btn btn-outline-secondary" onclick="loadCategories(1)">搜索</button>
+                </div>
+                <div th:with="isJump=${addUrl != null}">
+                    <a th:if="${isJump}" th:href="${addUrl}" class="btn btn-primary btn-sm text-nowrap">
+                        <i class="bi bi-plus-lg"></i> 新增[[${pageTitle.substring(0,2)}]]
+                    </a>
+
+                    <button th:unless="${isJump}" class="btn btn-primary btn-sm text-nowrap"
+                            data-bs-toggle="modal" data-bs-target="#categoryModal">
+                        <i class="bi bi-plus-lg"></i> 新增[[${pageTitle.substring(0,2)}]]
+                    </button>
+                </div>
+            </div>
+            <div class="text-muted small">共 <span id="totalCount">0</span> 条记录</div>
+        </div>
+
+        <table class="table table-sm table-hover table-bordered align-middle" style="table-layout: fixed;">
+            <thead class="small">
+            <tr>
+                <th th:each="col : ${columns}"
+                    th:text="${col.label}"
+                    th:style="|width: ${col.width};|">
+                </th>
+                <th style="width: 120px;" class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody id="dataTableBody" class="small"></tbody>
+        </table>
+
+        <nav class="d-flex justify-content-end">
+            <ul class="pagination pagination-sm mb-0" id="pagination"></ul>
+        </nav>
+    </div>
+
+    <div class="modal fade" id="categoryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h6 class="modal-title" th:text="${pageTitle}">编辑</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="itemForm">
+                        <input type="hidden" id="categoryId">
+                        <div class="mb-2">
+                            <label for="categoryName" class="form-label small" th:text="${itemName}">名称</label>
+                            <input type="text" id="categoryName" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2" th:if="${display}">
+                            <label for="categoryDesc" class="form-label small">描述</label>
+                            <textarea id="categoryDesc" class="form-control form-control-sm" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer py-1">
+                    <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="saveCategory()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+
+        const API_KEY = /*[[${apiKey}]]*/ 'categories';
+        let currentPage = 1;
+        const pageSize = 15;
+        const tbody = document.getElementById('dataTableBody');
+
+        async function loadCategories(page = 1) {
+            currentPage = page;
+            const keyword = document.getElementById('searchInput').value;
+            const res = await fetch(`/api/${API_KEY}?page=${page}&size=${pageSize}&keyword=${keyword}`);
+            const data = await res.json();
+
+            renderTable(data.list);
+            renderPagination(data.total, page);
+            document.getElementById('totalCount').innerText = data.total;
+        }
+
+        function renderTable(list) {
+            if (API_KEY === 'categories') {
+                tbody.innerHTML = list.map(item => `
+                <tr>
+                    <td class="text-secondary">${item.ID}</td>
+                    <td class="fw-bold text-truncate">${item.NAME}</td>
+                    <td class="text-muted text-truncate">${item.DESCRIPTION}</td>
+                    <td class="text-secondary small">${new Date(item.CREATE_TIME).toLocaleString()}</td>
+
+                    <td class="text-center">
+                        <a href="javascript:void(0)" class="me-2 text-decoration-none" onclick="editCategory(${item.ID}, '${item.NAME}', '${item.DESCRIPTION || ''}')">编辑</a>
+                        <a href="javascript:void(0)" class="text-danger text-decoration-none" onclick="deleteCategory(${item.ID})">删除</a>
+                    </td>
+                </tr>
+            `).join('');
+            }
+            if(API_KEY === 'tags'){
+                tbody.innerHTML = list.map(item => `
+                <tr>
+                    <td class="text-secondary">${item.ID}</td>
+                    <td class="fw-bold text-truncate">${item.NAME}</td>
+
+                    <td class="text-center">
+                        <a href="javascript:void(0)" class="me-2 text-decoration-none" onclick="editCategory(${item.ID}, '${item.NAME}')">编辑</a>
+                        <a href="javascript:void(0)" class="text-danger text-decoration-none" onclick="deleteCategory(${item.ID})">删除</a>
+                    </td>
+                </tr>
+            `).join('');
+            }
+            if(API_KEY === 'articles'){
+                tbody.innerHTML = list.map(item => `
+                <tr>
+                    <td class="text-secondary">${item.ID}</td>
+                    <td class="text-secondary">${item.TITLE}</td>
+                    <td class="fw-bold text-truncate">${item.NAME}</td>
+                    <td class="text-secondary small">${item.STATUS}</td>
+                    <td class="text-secondary small">${item.CREATE_TIME}</td>
+
+                    <td class="text-center">
+                        <a href="javascript:void(0)" class="me-2 text-decoration-none" onclick="editCategory(${item.ID}, '${item.NAME}')">编辑</a>
+                        <a href="javascript:void(0)" class="text-danger text-decoration-none" onclick="deleteCategory(${item.ID})">删除</a>
+                    </td>
+                </tr>
+            `).join('');
+            }
+
+
+        }
+
+        // 删除确认
+        async function deleteCategory(id) {
+          if (confirm('确定删除吗？')) {
+            const res = await fetch(`/api/${API_KEY}/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+              await loadCategories(currentPage); // 删除后刷新
+            } else {
+              const msg = await res.text();
+              alert(msg);
+            }
+          }
+        }
+        async function saveCategory() {
+            // 实时获取 ID
+            const currentId = document.getElementById('categoryId').value;
+
+            const payload = {
+                id: currentId,
+                name: document.getElementById('categoryName').value,
+            };
+
+            // 只有分类才有描述
+            const descEl = document.getElementById('categoryDesc');
+            if (descEl) {
+                payload.description = descEl.value;
+            }
+
+            const response = await fetch(`/api/${API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+          if (response.ok) {
+            // 关闭模态框并刷新列表
+            const modal = bootstrap.Modal.getInstance(document.getElementById('categoryModal'));
+            modal.hide();
+            await loadCategories(currentPage);
+          } else {
+            const errorMsg = await response.text();
+            alert(errorMsg);
+          }
+        }
+
+        // 点击编辑按钮时调用的函数
+        function editCategory(id, name, desc) {
+          document.getElementById('categoryId').value = id;
+          document.getElementById('categoryName').value = name;
+          let categoryDesc = document.getElementById('categoryDesc');
+              if(categoryDesc){
+                  categoryDesc.value = desc;
+              }
+
+          // 显示模态框
+          new bootstrap.Modal(document.getElementById('categoryModal')).show();
+        }
+        function renderPagination(total, activePage) {
+          const totalPages = Math.ceil(total / pageSize);
+          const paginationUl = document.getElementById('pagination');
+          let html = '';
+
+          // 上一页
+          html += `<li class="page-item ${activePage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="loadCategories(${activePage - 1})">&laquo;</a>
+             </li>`;
+
+          // 循环生成页码
+          for (let i = 1; i <= totalPages; i++) {
+            html += `<li class="page-item ${i === activePage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="loadCategories(${i})">${i}</a>
+                 </li>`;
+          }
+
+          // 下一页
+          html += `<li class="page-item ${activePage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="loadCategories(${activePage + 1})">&raquo;</a>
+             </li>`;
+
+          paginationUl.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => loadCategories(1));
+    </script>
+</section>
+</html>

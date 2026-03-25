@@ -30,37 +30,44 @@
 
                 <li class="nav-item">
                     <a sec:authorize="isAnonymous()" class="nav-link" href="#">Archives</a>
-                    <a sec:authorize-url="/admin/blog" class="nav-link" th:href="@{/admin/blog}">博客管理</a>
+                    <a sec:authorize-url="/admin/blog" class="nav-link" th:href="@{/admin/articles}">文章管理</a>
                 </li>
 
                 <li class="nav-item">
                     <a sec:authorize="isAnonymous()" class="nav-link" href="#">Labels</a>
-                    <a sec:authorize-url="/admin/blog" class="nav-link" th:href="@{/admin/blog}">标签管理</a>
+                    <a sec:authorize-url="/admin/blog" class="nav-link" th:href="@{/admin/tags}">标签管理</a>
+                </li>
+
+                <li class="nav-item">
+                    <a sec:authorize="isAnonymous()" class="nav-link" href="#">Labels</a>
+                    <a sec:authorize-url="/admin/blog" class="nav-link" th:href="@{/admin/categories}">分类管理</a>
                 </li>
 
                 <li class="nav-item">
                     <a sec:authorize="isAnonymous()" class="nav-link" href="#">About</a>
-                    <a sec:authorize-url="/admin/blog" class="nav-link" th:href="@{/admin/blog}">评论管理</a>
+                    <a sec:authorize-url="/admin/blog" class="nav-link" th:href="@{/admin/comment}">评论管理</a>
                 </li>
             </ul>
 
             <!-- 搜索 -->
-            <form class="d-flex me-3" role="search">
-                <input class="form-control me-2"
-                       placeholder="Search"
-                       type="search">
+            <form class="d-flex me-3" role="search" sec:authorize="isAnonymous()">
+                <label>
+                    <input class="form-control me-2"
+                           placeholder="Search"
+                           type="search">
+                </label>
                 <button class="btn btn-outline-success">
                     <i class="bi bi-search"></i>
                 </button>
             </form>
 
             <!-- 未登录 -->
-            <div sec:authorize="isAnonymous()">
-                <a class="btn btn-outline-primary"
-                   th:href="@{/login}">
-                    登录
-                </a>
-            </div>
+<!--            <div sec:authorize="isAnonymous()">-->
+<!--                <a class="btn btn-outline-primary"-->
+<!--                   th:href="@{/login}">-->
+<!--                    登录-->
+<!--                </a>-->
+<!--            </div>-->
 
             <!-- 已登录 -->
             <div class="dropdown"

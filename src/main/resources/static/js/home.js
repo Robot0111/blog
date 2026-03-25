@@ -4,7 +4,7 @@ function updateLayout() {
     const footer = document.querySelector("footer");
 
     const navHeight = nav ? nav.offsetHeight : 0;
-    const toolHeight = nav ? tool.offsetHeight : 0;
+    const toolHeight = (nav && tool) ? tool.offsetHeight : 0;
     const footerHeight = footer ? nav.offsetHeight : 0;
 
     document.documentElement.style.setProperty(

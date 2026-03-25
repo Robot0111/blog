@@ -1,31 +1,102 @@
 
+// 初始化弹窗实例 (Bootstrap 5)
+const saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
+const saveTriggerBtn = document.getElementById("save"); // 你的 floppy 图标按钮
+const confirmSaveBtn = document.getElementById("confirm-save-btn"); // 弹窗内的确定按钮
 
-// 假设你点击那个带有 'bi-floppy' 图标的保存按钮
-const saveBtn = document.getElementById("save")
+// 1. 点击 floppy 按钮只负责显示弹窗
+saveTriggerBtn.addEventListener('click', async () => {
+    // 1. 显示加载状态（可选：比如按钮变菊花）
+    saveTriggerBtn.disabled = true;
 
-saveBtn.addEventListener('click', () => {
+    try {
+        // 2. 并行请求分类和标签数据
+        await Promise.all([
+            fetchCategoriesToSelect(),
+            fetchTagsToCheckboxes()
+        ]);
 
-    // 构建表单数据
+        // 3. 数据加载完成后再显示弹窗
+        saveModal.show();
+    } catch (error) {
+        console.error("加载配置失败:", error);
+        alert("无法获取分类或标签数据，请稍后再试");
+    } finally {
+        saveTriggerBtn.disabled = false;
+    }
+});
+// 获取分类并渲染到 Select
+async function fetchCategoriesToSelect() {
+    const res = await fetch('/api/categories?page=1&size=100'); // 获取全部
+    const data = await res.json();
+    const select = document.getElementById('category');
+
+    // 保留第一个默认选项，清空后面的
+    select.innerHTML = '<option selected disabled value="">请选择一个分类...</option>';
+
+    data.list.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.ID;
+        opt.textContent = item.NAME;
+        select.appendChild(opt);
+    });
+}
+
+// 获取标签并渲染为胶囊按钮
+async function fetchTagsToCheckboxes() {
+    const res = await fetch('/api/tags?page=1&size=100');
+    const data = await res.json();
+    const container = document.querySelector('.d-flex.flex-wrap.gap-2');
+    container.innerHTML = ''; // 清空原有的静态 HTML
+
+    data.list.forEach(item => {
+        const html = `
+            <input type="checkbox" class="btn-check tag-input" id="tag-${item.ID}" autocomplete="off" value="${item.ID}">
+            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="tag-${item.ID}">${item.NAME}</label>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    });
+}
+
+// 2. 真正的保存逻辑放在弹窗的“确定”按钮上
+confirmSaveBtn.addEventListener('click', () => {
+    const categoryId = document.getElementById('category').value;
+
+    // 获取所有选中的标签 ID 列表
+    const selectedTags = Array.from(document.querySelectorAll('.tag-input:checked'))
+        .map(cb => parseInt(cb.value));
+
+    if (!categoryId) {
+        alert("请选择一个分类");
+        return;
+    }
+    // 动态获取弹窗内的数据
     const payload = {
         contentMd: document.getElementById('editor').value,
         contentHtml: document.getElementById('preview').innerHTML,
-        // categoryId: document.getElementById('categorySelect').value,
-        categoryId: 1,
-        tagIds: getSelectedTagIds() // 获取选中的标签 ID 数组
+        categoryId: parseInt(categoryId), // 获取选中的 ID
+        tagIds: selectedTags // 获取选中的标签数组
     };
 
+    // 执行保存请求
     fetch('/api/articles/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     })
-        .then(res => res.ok ? alert("保存成功") :res.toString())
-        .catch(err => console.error("提交失败:", err));
+        .then(res => {
+            if (res.ok) {
+                alert("保存成功");
+                saveModal.hide(); // 保存成功后关闭弹窗
+            } else {
+                return res.text().then(text => { throw new Error(text) });
+            }
+        })
+        .catch(err => {
+            console.error("提交失败:", err);
+            alert("提交失败，请检查控制台");
+        });
 });
-
-function getSelectedTagIds() {
-return [1,2,3,4];
-}
 
 const md = window.markdownit({
     html: true,

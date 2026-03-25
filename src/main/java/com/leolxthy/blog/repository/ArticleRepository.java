@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,6 +77,39 @@ public class ArticleRepository {
         String plain = md.replaceAll("(?m)^#+\\s+", "").replaceAll("[\\*`>]", "").trim();
         String firstLine = plain.split("\\n")[0];
         return firstLine.length() > 150 ? firstLine.substring(0, 150) : firstLine;
+    }
+
+    // 1. 分页查询（关联分类表获取名称）
+    public Map<String, Object> findPage(int page, int size, String keyword) {
+        int offset = (page - 1) * size;
+        // 搜索逻辑：匹配标题或摘要
+        String baseSql = "FROM blog_article a LEFT JOIN blog_category c ON a.category_id = c.id " +
+                "WHERE a.is_deleted = 0 AND (a.title LIKE ? OR a.summary LIKE ?)";
+        String searchKey = "%" + (keyword == null ? "" : keyword) + "%";
+
+        // 查总数
+        Long total = jdbcTemplate.queryForObject("SELECT COUNT(*) " + baseSql, Long.class, searchKey, searchKey);
+
+        // 查列表数据：注意 c.name AS category_name
+        String dataSql = "SELECT a.id, a.title, a.summary, a.status, a.views, a.create_time, c.name as category_name " +
+                baseSql + " ORDER BY a.id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(dataSql, searchKey, searchKey, offset, size);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", list);
+        result.put("total", total);
+        return result;
+    }
+
+    // 2. 逻辑删除（不物理删除，保护数据）
+    public int delete(Long id) {
+        return jdbcTemplate.update("UPDATE blog_article SET is_deleted = 1 WHERE id = ?", id);
+    }
+
+    // 3. 更新状态（发布/下线）
+    public int updateStatus(Long id, int status) {
+        return jdbcTemplate.update("UPDATE blog_article SET status = ?, update_time = CURRENT_TIMESTAMP WHERE id = ?", status, id);
     }
 }
 

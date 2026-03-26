@@ -27,7 +27,7 @@
   <!-- 页脚 -->
   <div th:replace="~{layout/footer :: footer}"></div>
 
-<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
   <script th:src="@{/webjars/markdown-it/14.1.0/dist/markdown-it.js}"></script>
   <script th:src="@{/webjars/katex/0.6.0/dist/katex.min.js}"></script>
   <script th:src="@{/webjars/katex/0.6.0/dist/contrib/auto-render.min.js}"></script>
@@ -41,7 +41,10 @@
   <script th:src="@{/webjars/markdown-it-ins/2.0.0/dist/markdown-it-ins.js}"></script>
   <script th:src="@{/webjars/markdown-it-mark/2.0.0/dist/markdown-it-mark.js}"></script>
   <!-- 页面专属JS -->
-  <th:block th:replace="${scripts}"></th:block>
+
+    <th:block th:replace="${scripts}"></th:block>
+
+
 <script th:src="@{/js/home.js}"></script>
 </body>
 </html>

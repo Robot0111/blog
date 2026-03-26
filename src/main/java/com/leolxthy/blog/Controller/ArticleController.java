@@ -21,7 +21,8 @@ public class ArticleController {
     public ResponseEntity<?> saveArticle(@RequestBody BlogArticle article) {
         try {
             long saved = articleRepository.saveArticle(
-                     article.getContentMd()
+                     article.getId()
+                    ,article.getContentMd()
                     ,article.getContentHtml()
                     ,article.getCategoryId()
                     ,article.getTagIds()
@@ -50,7 +51,17 @@ public class ArticleController {
     // 快速切换状态接口
     @PatchMapping("/{id}/status")
     public ResponseEntity<String> toggleStatus(@PathVariable Long id, @RequestParam int status) {
-        articleRepository.updateStatus(id, status);
-        return ResponseEntity.ok("状态更新成功");
+        int result = articleRepository.updateStatus(id, status);
+        return result > 0 ? ResponseEntity.ok("状态更新成功") : ResponseEntity.status(500).body("状态更新失败！");
     }
+    //根据id查询文章
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getArticle(@PathVariable Long id) {
+        Map<String, Object> article = articleRepository.findById(id);
+        if (article == null) {
+            return ResponseEntity.status(404).body("文章不存在");
+        }
+        return ResponseEntity.ok(article);
+    }
+
 }

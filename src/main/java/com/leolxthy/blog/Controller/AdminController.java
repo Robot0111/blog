@@ -4,10 +4,12 @@ import com.leolxthy.blog.Entity.TableColumn;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -63,4 +65,5 @@ public class AdminController {
         model.addAttribute("addUrl", "/admin"); // 点击“新增”跳转到独立写博客页面
         return "generic";
     }
+
 }

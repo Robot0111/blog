@@ -90,10 +90,10 @@
             if (API_KEY === 'categories') {
                 tbody.innerHTML = list.map(item => `
                 <tr>
-                    <td class="text-secondary">${item.ID}</td>
+                    <td class="text-truncate">${item.ID}</td>
                     <td class="fw-bold text-truncate">${item.NAME}</td>
                     <td class="text-muted text-truncate">${item.DESCRIPTION}</td>
-                    <td class="text-secondary small">${new Date(item.CREATE_TIME).toLocaleString()}</td>
+                    <td class="text-truncate small">${new Date(item.CREATE_TIME).toLocaleString()}</td>
 
                     <td class="text-center">
                         <a href="javascript:void(0)" class="me-2 text-decoration-none" onclick="editCategory(${item.ID}, '${item.NAME}', '${item.DESCRIPTION || ''}')">编辑</a>
@@ -105,7 +105,7 @@
             if(API_KEY === 'tags'){
                 tbody.innerHTML = list.map(item => `
                 <tr>
-                    <td class="text-secondary">${item.ID}</td>
+                    <td class="text-truncate">${item.ID}</td>
                     <td class="fw-bold text-truncate">${item.NAME}</td>
 
                     <td class="text-center">
@@ -118,14 +118,14 @@
             if(API_KEY === 'articles'){
                 tbody.innerHTML = list.map(item => `
                 <tr>
-                    <td class="text-secondary">${item.ID}</td>
-                    <td class="text-secondary">${item.TITLE}</td>
-                    <td class="fw-bold text-truncate">${item.NAME}</td>
-                    <td class="text-secondary small">${item.STATUS}</td>
-                    <td class="text-secondary small">${item.CREATE_TIME}</td>
+                    <td class="text-truncate">${item.ID}</td>
+                    <td class="text-truncate">${item.TITLE}</td>
+                    <td class="fw-bold text-truncate">${item.CATEGORY_NAME}</td>
+                    <td class="text-truncate small">${item.STATUS}</td>
+                    <td class="text-truncate small">${item.CREATE_TIME}</td>
 
                     <td class="text-center">
-                        <a href="javascript:void(0)" class="me-2 text-decoration-none" onclick="editCategory(${item.ID}, '${item.NAME}')">编辑</a>
+                        <a href="/admin?id=${item.ID}" class="me-2 text-decoration-none">编辑</a>
                         <a href="javascript:void(0)" class="text-danger text-decoration-none" onclick="deleteCategory(${item.ID})">删除</a>
                     </td>
                 </tr>
@@ -191,6 +191,8 @@
           // 显示模态框
           new bootstrap.Modal(document.getElementById('categoryModal')).show();
         }
+
+        //分页
         function renderPagination(total, activePage) {
           const totalPages = Math.ceil(total / pageSize);
           const paginationUl = document.getElementById('pagination');

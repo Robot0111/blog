@@ -1,6 +1,29 @@
+const editor = document.getElementById("editor")
+const preview = document.getElementById("preview")
 
+document.addEventListener('DOMContentLoaded', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
+
+    if (articleId) {
+        // 说明是编辑模式
+        const res = await fetch(`/api/articles/${articleId}`);
+        const article = await res.json();
+
+        // 1. 把内容塞进编辑器
+        editor.value = article.CONTENT_MD;
+
+        preview.innerHTML = article.CONTENT_HTML;
+
+        // 2. 记录 ID，以便后续提交时知道是更新
+        document.getElementById('articleId').value = article.ID;
+
+        // 3. 在你那个“保存弹窗”弹出时，记得勾选上对应的分类和标签
+        window.currentArticleData = article;
+    }
+});
 // 初始化弹窗实例 (Bootstrap 5)
-const saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
+const saveModal =  bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'));
 const saveTriggerBtn = document.getElementById("save"); // 你的 floppy 图标按钮
 const confirmSaveBtn = document.getElementById("confirm-save-btn"); // 弹窗内的确定按钮
 
@@ -10,21 +33,30 @@ saveTriggerBtn.addEventListener('click', async () => {
     saveTriggerBtn.disabled = true;
 
     try {
-        // 2. 并行请求分类和标签数据
-        await Promise.all([
-            fetchCategoriesToSelect(),
-            fetchTagsToCheckboxes()
-        ]);
+        // 加载分类标签
+        await Promise.all([fetchCategoriesToSelect(), fetchTagsToCheckboxes()]);
 
-        // 3. 数据加载完成后再显示弹窗
+        // 如果是编辑模式，回显数据
+        const articleId = document.getElementById('articleId').value;
+        if (articleId && window.currentArticleData) {
+            document.getElementById('category').value = window.currentArticleData.CATEGORY_ID || '';
+
+            const savedTagIds = window.currentArticleData.tagIds; // 后端返回的标签ID列表
+            savedTagIds.forEach(tagId => {
+                const checkbox = document.getElementById(`tag-${tagId}`);
+                if (checkbox) checkbox.checked = true;
+            });
+        }
+
+        // 正确获取实例并显示
         saveModal.show();
-    } catch (error) {
-        console.error("加载配置失败:", error);
-        alert("无法获取分类或标签数据，请稍后再试");
+    } catch (e) {
+        console.error("弹窗初始化失败", e);
     } finally {
         saveTriggerBtn.disabled = false;
     }
 });
+
 // 获取分类并渲染到 Select
 async function fetchCategoriesToSelect() {
     const res = await fetch('/api/categories?page=1&size=100'); // 获取全部
@@ -72,6 +104,7 @@ confirmSaveBtn.addEventListener('click', () => {
     }
     // 动态获取弹窗内的数据
     const payload = {
+        id:document.getElementById("articleId").value,
         contentMd: document.getElementById('editor').value,
         contentHtml: document.getElementById('preview').innerHTML,
         categoryId: parseInt(categoryId), // 获取选中的 ID
@@ -135,8 +168,7 @@ md.core.ruler.push("line_numbers", function (state) {
         }
     });
 });
-const editor = document.getElementById("editor")
-const preview = document.getElementById("preview")
+
 function getCursorLine(textarea) {
     const value = textarea.value;
     const cursorPos = textarea.selectionStart;

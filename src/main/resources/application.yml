@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: blog
+
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.2.122:1521/ORCLPDB1
+    username: blog
+    password: 123456
+    driver-class-name: oracle.jdbc.OracleDriver
+
+    hikari:
+      connection-timeout: 30000
+      minimum-idle: 5
+      idle-timeout: 600000
+
+  jdbc:
+    template:
+      fetch-size: -1
+      max-rows: 500
+
+  web:
+    resources:
+      static-locations: classpath:/static/
+      add-mappings: true
+
+      cache:
+        period: 0
+
+      chain:
+        enabled: true
+        cache: false
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML
+    cache: false
+
+logging:
+  level:
+    root: INFO
+
+#  file:
+#    path: /app/logs
